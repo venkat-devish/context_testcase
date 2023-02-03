@@ -1,19 +1,27 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import cartState from "../../Context/ShopContext";
 import "./Card.scss";
 
 const Card = ({ image, title, price }) => {
-  const { addToCart, cartItems, deleteFromCart, totalPrice } = cartState();
+  const { addToCart, cartItems, deleteFromCart } = cartState();
   const [isExisting, setisExisting] = useState(false);
 
-  cartItems.map((el) => {
-    if (el.title === title) setisExisting(true);
-  });
+  useEffect(() => {
+    const existingProduct = cartItems.find(
+      (product) => product.title === title
+    );
+    if (existingProduct) {
+      setisExisting(true);
+    } else {
+      setisExisting(false);
+    }
+  }, [cartItems, title]);
 
-  console.log(isExisting);
+  const _handleClick = () => {
+    const product = { image, title, price };
+    isExisting ? deleteFromCart(product) : addToCart(product);
+  };
 
-  // cartItems.map((el) => console.log(el.title));
-  // console.log(title, "sx");
   return (
     <div className="card__container">
       <img src={image} alt="" />
@@ -21,7 +29,7 @@ const Card = ({ image, title, price }) => {
         <p>{title}</p>
         <p>{price}</p>
       </div>
-      <button onClick={() => addToCart({ image, title, price })}>+</button>
+      <button onClick={_handleClick}>{isExisting ? "-" : "+"}</button>
     </div>
   );
 };

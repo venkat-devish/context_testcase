@@ -17,7 +17,7 @@ export const ShopProvider = ({ children }) => {
 
   const deleteFromCart = (product) => {
     const updatedCartItems = state.cartItems.filter(
-      (item) => item.name !== product.name
+      (item) => item.title !== product.title
     );
     updatePrice(updatedCartItems);
 
